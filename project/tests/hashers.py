@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.contrib.auth.hashers import BasePasswordHasher
 
 
@@ -10,7 +8,7 @@ class DummyHasher(BasePasswordHasher):
     when using user passwords hasing
     (when creating users for example)
 
-    /!\ This is not suitable for production.
+    This is not suitable for production.
     """
 
     algorithm = "dummy_hasher"
@@ -26,4 +24,4 @@ class DummyHasher(BasePasswordHasher):
 
     def safe_summary(self, encoded):
         algorithm, _hash = encoded.split("$", 2)
-        return OrderedDict([("algorithm", algorithm), ("hash", _hash)])
+        return {"algorithm": algorithm, "hash": _hash}
