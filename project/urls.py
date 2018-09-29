@@ -7,13 +7,16 @@ urlpatterns = [path("admin/", admin.site.urls)]
 
 
 if settings.DEBUG:
-    from os.path import join
     from django.views import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    from rest_framework_swagger.views import get_swagger_view
+
+    schema_view = get_swagger_view(title="Housing api")
 
     urlpatterns.extend(staticfiles_urlpatterns())
     urlpatterns.extend(
         [
+            path("swagger/", schema_view),
             path(
                 "favicon.ico",
                 static.serve,
