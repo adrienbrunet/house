@@ -8,6 +8,7 @@ django = "*"
 black = "*"
 django-rest-framework = "*"
 django-rest-swagger = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest = "*"
