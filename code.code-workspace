@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "/home/adrien/.local/share/virtualenvs/house-HYqOK2lZ/bin/python"
+	}
 }
