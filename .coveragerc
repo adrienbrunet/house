@@ -1,0 +1,17 @@
+[run]
+omit =
+    */tests/*
+    */migrations/*
+    */locale/*
+    */site-package/*
+    */fixtures/*
+    manage.py
+
+[report]
+omit =
+    */tests/*
+    */migrations/*
+    */locale/*
+    */site-package/*
+    */fixtures/*
+    manage.py
