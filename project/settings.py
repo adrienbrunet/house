@@ -114,7 +114,7 @@ STATIC_URL = "/static/"
 
 
 if DEBUG:
-    PASSWORD_HASHERS = ("projects.tests.hashers.DummyHasher",)
+    PASSWORD_HASHERS = ("project.tests.hashers.DummyHasher",)
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
