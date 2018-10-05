@@ -12,6 +12,6 @@ def test_installed_apps():
         "rest_framework",
         "rest_framework.authtoken",
         "rest_framework_swagger",
-        "house",
+        "apps.house",
     }
     assert apps.issubset(settings.INSTALLED_APPS), settings.INSTALLED_APPS
