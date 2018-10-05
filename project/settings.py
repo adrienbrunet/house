@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_swagger",
-    "apps.houses.apps.HousesConfig",
+    "apps.housing.apps.HousingConfig",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
