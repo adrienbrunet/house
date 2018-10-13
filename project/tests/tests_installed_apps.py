@@ -14,5 +14,7 @@ def test_installed_apps():
         "rest_framework_swagger",
         "apps.housing.apps.HousingConfig",
         "apps.users.apps.UsersConfig",
+        "apps.addresses.apps.AddressesConfig",
+        "apps.contact.apps.ContactConfig",
     }
     assert apps.issubset(settings.INSTALLED_APPS), settings.INSTALLED_APPS
