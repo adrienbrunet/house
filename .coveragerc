@@ -6,6 +6,7 @@ omit =
     */site-package/*
     */fixtures/*
     manage.py
+    conftest.py
 
 [report]
 omit =
@@ -15,3 +16,4 @@ omit =
     */site-package/*
     */fixtures/*
     manage.py
+    conftest.py
