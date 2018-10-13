@@ -1,9 +1,14 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import include, path, re_path
 
 
-urlpatterns = [path("admin/", admin.site.urls)]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include("apps.users.urls")),
+    path("", include("apps.addresses.urls")),
+    path("", include("apps.contact.urls")),
+]
 
 
 if settings.DEBUG:
