@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -41,8 +41,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_swagger",
+    "authtools",
+    "django_filters",
     "apps.housing.apps.HousingConfig",
     "apps.users.apps.UsersConfig",
+    "apps.addresses.apps.AddressesConfig",
+    "apps.contact.apps.ContactConfig",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -57,6 +61,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -155,3 +160,11 @@ SWAGGER_SETTINGS = {
 }
 
 INTERNAL_IPS = ["127.0.0.1", "localhost"]
+
+DEV = "development"
+PROD = "production"
+ENV = os.environ.get("DJANGO_ENV", DEV)
+
+
+if ENV != PROD:
+    PASSWORD_HASHERS = ("project.tests.hashers.DummyHasher",)
