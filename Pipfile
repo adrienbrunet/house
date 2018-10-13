@@ -10,6 +10,8 @@ django-rest-framework = "*"
 django-rest-swagger = "*"
 django-cors-headers = "*"
 djangorestframework-camel-case = "*"
+django-authtools = "*"
+django-filter = "*"
 
 [dev-packages]
 pytest = "*"
