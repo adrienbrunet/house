@@ -26,3 +26,7 @@ def test_url_static(path_solver):
 
 def test_url_media(path_solver):
     assert path_solver.resolve("media/path")
+
+
+def test_rest_framework_auth_urls(path_solver):
+    assert path_solver.resolve("api-auth/login/")

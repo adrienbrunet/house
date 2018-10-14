@@ -22,6 +22,7 @@ if settings.DEBUG:
     urlpatterns.extend(
         [
             path("swagger/", schema_view),
+            path("api-auth/", include("rest_framework.urls")),
             path(
                 "favicon.ico",
                 static.serve,
