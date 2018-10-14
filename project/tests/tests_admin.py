@@ -7,8 +7,10 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from apps.addresses.models import Address
-from apps.users.models import User, UserProfile
 from apps.contact.models import Contact
+from apps.groups.models import Group
+from apps.housing.models import Housing
+from apps.users.models import User, UserProfile
 
 
 @pytest.fixture
@@ -18,7 +20,7 @@ def registered_models():
 
 @pytest.fixture
 def admin_models():
-    return {Contact, Token, Address, User, UserProfile}
+    return {Address, Contact, Group, Housing, Token, User, UserProfile}
 
 
 def tests_models_are_correctly_registered(admin_models, registered_models):
