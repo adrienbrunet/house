@@ -10,11 +10,11 @@ from .models import User, UserProfile
 from .services import activate_user, set_password_user
 
 
-def get_user_from_email(email):
+def get_user_from_email(email, field_key="email"):
     try:
         return User.objects.get(email=email)
     except User.DoesNotExist:
-        raise serializers.ValidationError(_("Invalid email address"))
+        raise serializers.ValidationError({field_key: [_("Invalid email address")]})
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -94,24 +94,33 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+    username = serializers.CharField(label=_("Username"))
+    password = serializers.CharField(
+        label=_("Password"), style={"input_type": "password"}, trim_whitespace=False
+    )
     confirm_token = serializers.CharField(required=False)
-
-    def validate_username(self, value):
-        return get_user_from_email(value)
 
     def validate(self, data):
         """
-        Checks if "confirm_token" is correct.
-        If it is, it activates the user or raise an error otherwise.
+        First, checks user exists and password is correct.
+        Then, checks if "confirm_token" is correct when provided.
+        If it is, it activates the user or raises an error otherwise.
         """
-        user = self.validate_username(data["username"])
-        if not "confirm_token" in data:
-            return data
+        user = get_user_from_email(data["username"], "username")
 
-        if not default_token_generator.check_token(user, data["confirm_token"]):
-            raise serializers.ValidationError(_("Invalid confirm token"))
+        if not user.check_password(data["password"]):
+            msg = _("Password is incorrect.")
+            raise serializers.ValidationError({"password": [msg]}, code="authorization")
 
-        activate_user(user)
+        confirm_token = data.get("confirm_token", None)
+        if confirm_token:
+            if not default_token_generator.check_token(user, confirm_token):
+                raise serializers.ValidationError(
+                    _("Invalid confirm token."), code="authorization"
+                )
+            user = activate_user(user)
+        elif not user.is_active:
+            raise serializers.ValidationError(
+                _("User is not yet confirmed."), code="authorization"
+            )
         return data

@@ -53,19 +53,7 @@ class SignupView(generics.CreateAPIView):
 
 
 class ObtainAuthTokenView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        try:
-            response = super().post(request, *args, **kwargs)
-            token = Token.objects.get(key=response.data["token"])
-            return Response({"token": token.key, "userId": token.user_id})
-        except Exception:
-            log.exception("")
-            if not serializer.validated_data.get("username").is_active:
-                raise ValidationError(detail=_("User is not confirmed"))
-        raise ValidationError(detail=_("Invalid password"))
+    seriliazer_class = LoginSerializer
 
 
 class ResetPasswordView(APIView):

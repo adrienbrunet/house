@@ -31,3 +31,4 @@ def set_password_user(user, password):
 def activate_user(user):
     user.is_active = True
     user.save()
+    return user

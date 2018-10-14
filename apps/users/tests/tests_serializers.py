@@ -36,9 +36,31 @@ def test_validate_login_serializer_with_confirm_token(db):
     token = default_token_generator.make_token(user)
     data = {"username": user.email, "confirm_token": token, "password": "password"}
     serializer = LoginSerializer(data=data)
-    assert serializer.is_valid()
+    assert serializer.is_valid(), serializer.errors
     user_updated = User.objects.get(pk=user.pk)
     assert user_updated.is_active
+
+
+def test_validate_login_with_wrong_email(db):
+    data = {"username": "not@¶egistered.com", "password": "password"}
+    serializer = LoginSerializer(data=data)
+    assert not serializer.is_valid()
+    assert "username" in serializer.errors
+
+
+def test_validate_login_with_wrong_password(db):
+    user = UserFactory()
+    data = {"username": user.email, "password": "wrong password"}
+    serializer = LoginSerializer(data=data)
+    assert not serializer.is_valid()
+    assert "password" in serializer.errors
+
+
+def test_validate_login_with_inactive_user(db):
+    user = UserFactory(is_active=False)
+    data = {"username": user.email, "password": "password"}
+    serializer = LoginSerializer(data=data)
+    assert not serializer.is_valid()
 
 
 def test_validate_login_serializer_raise_parse_error_with_wrong_token(db):
