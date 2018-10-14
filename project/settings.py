@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "apps.addresses.apps.AddressesConfig",
     "apps.contact.apps.ContactConfig",
     "apps.groups.apps.GroupsConfig",
+    "apps.bookings.apps.BookingsConfig",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

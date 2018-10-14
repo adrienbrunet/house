@@ -11,6 +11,7 @@ from apps.contact.models import Contact
 from apps.groups.models import Group
 from apps.housing.models import Housing
 from apps.users.models import User, UserProfile
+from apps.bookings.models import Booking
 
 
 @pytest.fixture
@@ -20,7 +21,7 @@ def registered_models():
 
 @pytest.fixture
 def admin_models():
-    return {Address, Contact, Group, Housing, Token, User, UserProfile}
+    return {Address, Booking, Contact, Group, Housing, Token, User, UserProfile}
 
 
 def tests_models_are_correctly_registered(admin_models, registered_models):
