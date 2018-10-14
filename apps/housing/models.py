@@ -13,7 +13,12 @@ class Housing(models.Model):
     """
 
     name = models.CharField(_("name"), max_length=255)
-    # owner = models.ForeignKey(user_model, verbose_name=_("owner"))
+    group = models.ForeignKey(
+        "groups.Group",
+        verbose_name=_("Group"),
+        on_delete=models.CASCADE,
+        related_name="housing",
+    )
 
     class Meta:
         verbose_name = _("housing")
