@@ -9,7 +9,7 @@ from apps.users.models import UserProfile
 
 class Address(ArchivableModel):
     """
-    Generic model to store addresses.
+    Generic model to store addresses for UserProfiles.
     It can be used for housing, billing, etc...
     """
 
