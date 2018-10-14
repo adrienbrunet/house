@@ -27,19 +27,19 @@ def user_with_token(db):
 
 
 def test_user_detail_view_unauthed(anonymous_api_client):
-    url = reverse("me")
+    url = reverse("users:me")
     response = anonymous_api_client.get(url)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 def test_user_detail_view_authed(logged_api_client):
-    url = reverse("me")
+    url = reverse("users:me")
     response = logged_api_client.get(url)
     assert response.status_code == status.HTTP_200_OK
 
 
 def test_register_valid_user(db, user):
-    signup_url = reverse("signup")
+    signup_url = reverse("users:signup")
     data = {"email": user.email, "password": user.password}
     response = anonymous_client.post(signup_url, data, format="json")
 
@@ -49,7 +49,7 @@ def test_register_valid_user(db, user):
 
 
 def test_register_invalid_user():
-    signup_url = reverse("signup")
+    signup_url = reverse("users:signup")
     required_fields = ("email", "password")
     data = {"username": "foo"}
     response = anonymous_client.post(signup_url, data, format="json")
@@ -59,14 +59,14 @@ def test_register_invalid_user():
 
 
 def test_login_user_wrong_password(logged_client):
-    url = reverse("login")
+    url = reverse("users:login")
     data = {"username": logged_client.user.email, "password": "wrong_password"}
     response = logged_client.post(url, data=data, format="json")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 def test_valid_login(user_with_token):
-    login_url = reverse("login")
+    login_url = reverse("users:login")
     data = {"username": user_with_token.email, "password": "password"}
     response = anonymous_client.post(login_url, data, format="json")
 
@@ -75,14 +75,14 @@ def test_valid_login(user_with_token):
 
 
 def test_invalid_login(user):
-    login_url = reverse("login")
+    login_url = reverse("users:login")
     data = {"username": user.email, "password": "wrong_password"}
     response = anonymous_client.post(login_url, data, format="json")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 def test_login_user_inactive(logged_client):
-    url = reverse("login")
+    url = reverse("users:login")
     logged_client.user.is_active = False
     logged_client.user.save()
     data = {"username": logged_client.user.email, "password": "password"}
@@ -92,7 +92,9 @@ def test_login_user_inactive(logged_client):
 
 def test_reset_password_generate(logged_api_client):
     data = {"email": logged_api_client.user.email}
-    response = logged_api_client.patch(reverse("reset-password"), data, format="json")
+    response = logged_api_client.patch(
+        reverse("users:reset-password"), data, format="json"
+    )
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
@@ -104,14 +106,16 @@ def test_reset_password_confirm(logged_api_client):
         "uid": encode_uid(logged_api_client.user.id),
         "reset_token": reset_token,
     }
-    response = logged_api_client.patch(reverse("reset-password"), data, format="json")
+    response = logged_api_client.patch(
+        reverse("users:reset-password"), data, format="json"
+    )
     assert response.status_code == status.HTTP_204_NO_CONTENT
     user = User.objects.get(id=logged_api_client.user.id)
     assert user.check_password(password)
 
 
 def test_change_password_with_correct_password(logged_api_client):
-    url = reverse("user-change-password")
+    url = reverse("users:user-change-password")
     response = logged_api_client.patch(
         url,
         data={"old_password": "password", "new_password": "P@ssw0rd1234"},
