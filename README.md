@@ -1,6 +1,7 @@
 # House
 
 This is an API to handle a small personnal project where one can manage its housing. It will handle bookings, faq and more to come.
+It is hosted on [github](https://github.com/adrienbrunet/house).
 
 API is build on top of [Django](https://www.djangoproject.com/) and [drf](http://www.django-rest-framework.org/).
 
