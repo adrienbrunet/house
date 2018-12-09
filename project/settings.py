@@ -123,9 +123,6 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "static"
 
 
-if DEBUG:
-    PASSWORD_HASHERS = ("project.tests.hashers.DummyHasher",)
-
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
