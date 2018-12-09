@@ -1,3 +1,4 @@
+from django.contrib.auth.models import update_last_login
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import DjangoUnicodeDecodeError
@@ -8,13 +9,6 @@ from rest_framework import serializers
 from apps.common.uid import decode_uid
 from .models import User, UserProfile
 from .services import activate_user, set_password_user
-
-
-def get_user_from_email(email, field_key="email"):
-    try:
-        return User.objects.get(email=email)
-    except User.DoesNotExist:
-        raise serializers.ValidationError({field_key: [_("Invalid email address")]})
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -63,7 +57,10 @@ class UserEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     def validate_email(self, value):
-        return get_user_from_email(value)
+        try:
+            return User.objects.get(email=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(_("No user with this email."))
 
 
 class ResetPasswordSerializer(serializers.Serializer):
@@ -106,7 +103,10 @@ class LoginSerializer(serializers.Serializer):
         Then, checks if "confirm_token" is correct when provided.
         If it is, it activates the user or raises an error otherwise.
         """
-        user = get_user_from_email(data["username"], "username")
+        try:
+            user = User.objects.get(email=data["username"])
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"username": [_("Invalid email address")]})
 
         if not user.check_password(data["password"]):
             msg = _("Password is incorrect.")
@@ -123,4 +123,6 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 _("User is not yet confirmed."), code="authorization"
             )
+        update_last_login(None, user)
+        data["user"] = user
         return data

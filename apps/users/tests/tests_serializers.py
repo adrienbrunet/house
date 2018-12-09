@@ -107,3 +107,8 @@ def test_reset_password_serializer_uid_wrong_reset_token(db):
     serializer = ResetPasswordSerializer(data=data)
     serializer.is_valid()
     assert "reset_token" in serializer.errors
+
+
+def test_email_serializer_with_unknow_mail(db):
+    serializer = UserEmailSerializer(data={"email": "foo@bar.baz"})
+    assert not serializer.is_valid()

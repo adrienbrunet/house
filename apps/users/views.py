@@ -53,7 +53,7 @@ class SignupView(generics.CreateAPIView):
 
 
 class ObtainAuthTokenView(ObtainAuthToken):
-    seriliazer_class = LoginSerializer
+    serializer_class = LoginSerializer
 
 
 class ResetPasswordView(APIView):
