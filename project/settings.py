@@ -165,5 +165,14 @@ PROD = "production"
 ENV = os.environ.get("DJANGO_ENV", DEV)
 
 
-if ENV != PROD:
+if ENV != PROD and DEBUG:
     PASSWORD_HASHERS = ("project.tests.hashers.DummyHasher",)
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+FRONT_BASE_URL_MAPPING = {
+    DEV: "localhost:8080",
+    PROD: "bemyguest.com"
+}
+
+FRONT_BASE_URL = FRONT_BASE_URL_MAPPING[ENV]
