@@ -28,3 +28,13 @@ Code formatting is ensured with [black](https://black.readthedocs.io/en/stable/)
 Unit and integration tests use [pytest](https://docs.pytest.org/en/latest/).
 
 They can be run with the following command: `pytest`
+
+## Logging
+
+Classic django logs has been kept.
+"Audit" log has been added to monitor some actions or build some metrics.
+It's base on systemd and thus journalctl.
+
+You can access these logs with the following command:
+
+`journalctl -t django-audit`
