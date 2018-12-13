@@ -12,6 +12,7 @@ django-cors-headers = "*"
 djangorestframework-camel-case = "*"
 django-authtools = "*"
 django-filter = "*"
+systemd-python = "*"
 
 [dev-packages]
 pytest = "*"
