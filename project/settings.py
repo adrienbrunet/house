@@ -176,3 +176,35 @@ FRONT_BASE_URL_MAPPING = {
 }
 
 FRONT_BASE_URL = FRONT_BASE_URL_MAPPING[ENV]
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(process)d [%(levelname)10s] %(name)40s: %(message)s'
+        },
+        'standard': {
+            'format': '[%(levelname)5s] %(name)s: %(message)s',
+        },
+        'audit': {
+            'format': '%(asctime)20s | %(user)24r > %(message)s',
+        },
+    },
+    'handlers': {
+        'audit_file': {
+            'level': 'INFO',
+            'class': 'systemd.journal.JournalHandler',
+            'formatter': 'audit',
+            'SYSLOG_IDENTIFIER': 'django-audit',
+        },
+    },
+    'loggers': {
+        'audit': {
+            'handlers': ['audit_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

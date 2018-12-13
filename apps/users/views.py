@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from apps.addresses.models import Address
 from apps.common.uid import decode_uid
 
-# from . import emails
 from .models import User
 from .serializers import (
     LoginSerializer,
@@ -30,7 +29,7 @@ from .services import (
 )
 
 
-log = logging.getLogger(__name__)
+audit = logging.getLogger("audit").getChild(__name__)
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -49,11 +48,22 @@ class SignupView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
+        audit.info("%r signed up", user, extra={"user": self.request.user})
         send_mail_with_confirm_token(user)
 
 
 class ObtainAuthTokenView(ObtainAuthToken):
     serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        audit.info("ObtainAuthToken", user, extra={"user": user})
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key})
 
 
 class ResetPasswordView(APIView):
@@ -66,13 +76,17 @@ class ResetPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def _request_password_reset(self, request):
+        audit.info("Request Password Reset", extra={"user": request.user})
         serializer = UserEmailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        audit.info("Request Password Reset Success", extra={"user": request.user})
         send_reset_password_mail(serializer.validated_data.get("email"))
 
     def _set_new_password_with_reset_token(self, request):
+        audit.info("New Password Reset", extra={"user": request.user})
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        audit.info("New Password Reset Success", extra={"user": request.user})
         set_password_user(
             serializer.validated_data.get("uid"), serializer.data.get("password")
         )
